@@ -11,65 +11,52 @@ public class Solution {
 		int testCases = Integer.parseInt(in.nextLine());
 		while (testCases > 0) {
 			String line = in.nextLine();
-			printValidTag(line);
+			Solution solution = new Solution();
+			solution.printContentWithinValidTags(line);
 			testCases--;
 		}
 		in.close();
 	}
 
-	private static void printValidTag(String line) {
-		char lastChar = ' ';
-		boolean isTag = false;
-		boolean isEndTag = false;
-		List<String> tags = new ArrayList<>();
-		String tag = "";
-		String endTag = "";
-		boolean ignore = false;
-		boolean isMsg = true;
-		String msg = "";
-		for (int i = 0; i < line.length(); i++) {
-			char letter = line.charAt(i);
-			if (isTag) {
-				if (letter == '/') {
-					isTag = false;
-					isEndTag = true;
-					endTag = endTag + letter;
+	private void printContentWithinValidTags(String line) {
+		List<String> startTags = new ArrayList<>();
+		List<String> endTags = new ArrayList<>();
+		String[] starts = line.split("<");
+		for (int i = 1; i < starts.length; i++) {
+			if (starts[i].contains(">")) {
+				int endPos = starts[i].indexOf(">");
+				String tag = starts[i].substring(0, endPos);
+				if (starts[i].charAt(0) == '/') {
+					endTags.add(tag);
 				} else {
-					tag = tag + letter;
+					startTags.add(tag);
 				}
-			}
-			if (letter == '<') {
-				isMsg = false;
-				ignore = false;
-				if (isTag) {
-					// Doble <
-					ignore = true;
-					tags = new ArrayList<>();
-					tag = "";
-				}
-				isTag = true;
-			}
-			if (letter == '>') {
-				if (isTag) {
-					isTag = false;
-					tags.add(tag);
-				}
-				if (isEndTag) {
-					isEndTag = false;
-					if (tags.size() > 0 && tags.get(tags.size() - 1).equals(endTag)) {
-						tags.remove(tags.size() - 1);
-					} else {
-						msg = "";
-					}
-				}
-			}
-			if (isMsg) {
-				msg = msg + letter;
-			}
-			lastChar = letter;
-			if (letter == '>' && tags.size() == 0) {
-				System.out.println(msg);
 			}
 		}
+		for (int i = 1; i < starts.length; i++) {
+			if (starts[i].contains(">")) {
+			}
+		}
+		/*
+		 * 
+		 * boolean printAnything = false; boolean isStartTag = false; boolean isEndTag =
+		 * false; List<String> startTags = new ArrayList<>(); List<String> endTags = new
+		 * ArrayList<>(); String tag = ""; String phraseToPrint = ""; for (int i = 0; i
+		 * < line.length(); i++) { char currentChar = line.charAt(i); if (currentChar ==
+		 * '<') { if(isStartTag || isEndTag) { phraseToPrint = phraseToPrint + tag; }
+		 * tag = ""; i++; if (i >= line.length()) { break; } currentChar =
+		 * line.charAt(i); if (currentChar == '/') { isEndTag = true; } else if
+		 * (currentChar == '>') { // } else { isStartTag = true; phraseToPrint = ""; tag
+		 * = tag + currentChar; } } else if (currentChar == '>') { if (isStartTag) { if
+		 * (!tag.isEmpty()) { startTags.add(tag); } tag = ""; isStartTag = false; } else
+		 * if (isEndTag) { if (!tag.isEmpty()) { endTags.add(tag); } tag = ""; isEndTag
+		 * = false; } else { // Puede tener una frase el caracter ">" ? } } else { if
+		 * (isStartTag || isEndTag) { tag = tag + currentChar; } else if
+		 * (!startTags.isEmpty()) { phraseToPrint = phraseToPrint + currentChar; } } if
+		 * (!isStartTag && !isEndTag && startTags.equals(endTags) &&
+		 * !phraseToPrint.isEmpty() && !startTags.isEmpty()) { printAnything = true;
+		 * System.out.println(phraseToPrint); phraseToPrint = ""; } } if
+		 * (!printAnything) { System.out.println("None"); }
+		 */
 	}
 }
